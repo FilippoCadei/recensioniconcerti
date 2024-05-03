@@ -1,6 +1,6 @@
 function endpoint(app, connpool) {
 
-    app.post("/api/utenti", (req, res) => {
+    app.post("/api/cantanti", (req, res) => {
         var errors = []
         /* controllo dati inseriti
         if (!req.body.description) {
@@ -15,12 +15,13 @@ function endpoint(app, connpool) {
             return;
         }
         var data = {
-            nominativo:req.body.nominativo,
+            nomearte:req.body.nominativo,
             nome:req.body.nome,
-            cognome:req.body.cognome
+            cognome:req.body.cognome,
+            età: req.body.età
         }
 
-        var sql = 'INSERT INTO utente (nominativo,nome,cognome) VALUES (?,?)'
+        var sql = 'INSERT INTO cantante (nomearte,nome,cognome,età) VALUES (?,?)'
         var params = [data.description, data.status]
         connpool.query(sql, params, (error, results) => {
             if (error) {
@@ -39,8 +40,8 @@ function endpoint(app, connpool) {
 
 
 
-    app.get("/api/utenti", (req, res, next) => {
-        var sql = "select * from utente"
+    app.get("/api/cantanti", (req, res, next) => {
+        var sql = "select * from cantante"
         var params = []
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -55,8 +56,8 @@ function endpoint(app, connpool) {
     });
 
 
-    app.get("/api/utenti/:id", (req, res) => {
-        var sql = "select * from utente where idutente = ?"
+    app.get("/api/cantanti/:id", (req, res) => {
+        var sql = "select * from cantante where idcantante = ?"
         var params = [req.params.id]
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -71,16 +72,18 @@ function endpoint(app, connpool) {
     });
 
 
-    app.put("/api/utenti/:id", (req, res) => {
+    app.put("/api/cantanti/:id", (req, res) => {
         var data = {
             description: req.body.description,
             status: req.body.status,
         }
         connpool.execute(
-            `UPDATE utente set 
-               description = COALESCE(?,description), 
-               status = COALESCE(?,status) 
-               WHERE idutente = ?`,
+            `UPDATE cantante set 
+               nomearte = COALESCE(?,nomearte), 
+               nome = COALESCE(?,nome),
+               cognome = COALESCE(?,cognome),
+               età = COALESCE(?,età)
+               WHERE idcantante = ?`,
             [data.description, data.status, req.params.id],
             function (err, result) {
                 if (err){
@@ -98,9 +101,9 @@ function endpoint(app, connpool) {
 
 
 
-    app.delete("/api/utenti/:id", (req, res) => {
+    app.delete("/api/cantanti/:id", (req, res) => {
         connpool.execute(
-            'DELETE FROM task WHERE idutente = ?',
+            'DELETE FROM task WHERE idcantante = ?',
             [req.params.id],
             function (err, result) {
                 if (err){
