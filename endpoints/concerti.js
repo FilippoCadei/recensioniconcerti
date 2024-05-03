@@ -1,6 +1,6 @@
 function endpoint(app, connpool) {
 
-    app.post("/api/tasks", (req, res) => {
+    app.post("/api/concerti", (req, res) => {
         var errors = []
         /* controllo dati inseriti
         if (!req.body.description) {
@@ -15,12 +15,12 @@ function endpoint(app, connpool) {
             return;
         }
         var data = {
-            description: req.body.description,
-            status: req.body.status,
+            nome: req.body.nome,
+            città: req.body.città,
         }
 
-        var sql = 'INSERT INTO task (description, status) VALUES (?,?)*'
-        var params = [data.description, data.status]
+        var sql = 'INSERT INTO concerto (nome, città) VALUES (?,?)*'
+        var params = [data.nome, data.città]
         connpool.query(sql, params, (error, results) => {
             if (error) {
                 res.status(400).json({ "error": error.message })
@@ -38,8 +38,8 @@ function endpoint(app, connpool) {
 
 
 
-    app.get("/api/tasks", (req, res, next) => {
-        var sql = "select * from task"
+    app.get("/api/concerti", (req, res, next) => {
+        var sql = "select * from concerto"
         var params = []
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -54,8 +54,8 @@ function endpoint(app, connpool) {
     });
 
 
-    app.get("/api/tasks/:id", (req, res) => {
-        var sql = "select * from task where task_id = ?"
+    app.get("/api/concerti/:id", (req, res) => {
+        var sql = "select * from concerto where idconcerto = ?"
         var params = [req.params.id]
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -70,17 +70,17 @@ function endpoint(app, connpool) {
     });
 
 
-    app.put("/api/tasks/:id", (req, res) => {
+    app.put("/api/concerti/:id", (req, res) => {
         var data = {
-            description: req.body.description,
-            status: req.body.status,
+            nome: req.body.nome,
+            città: req.body.città,
         }
         connpool.execute(
-            `UPDATE task set 
-               description = COALESCE(?,description), 
-               status = COALESCE(?,status) 
-               WHERE task_id = ?`,
-            [data.description, data.status, req.params.id],
+            `UPDATE concerto set 
+               nome = COALESCE(?,nome), 
+               città = COALESCE(?,città) 
+               WHERE idconcerto = ?`,
+            [data.nome, data.città, req.params.id],
             function (err, result) {
                 if (err){
                     res.status(400).json({"error": err.message})
@@ -97,9 +97,9 @@ function endpoint(app, connpool) {
 
 
 
-    app.delete("/api/tasks/:id", (req, res) => {
+    app.delete("/api/concerti/:id", (req, res) => {
         connpool.execute(
-            'DELETE FROM task WHERE task_id = ?',
+            'DELETE FROM concerto WHERE idconcerto = ?',
             [req.params.id],
             function (err, result) {
                 if (err){
