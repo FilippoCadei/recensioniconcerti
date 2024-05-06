@@ -20,8 +20,8 @@ function endpoint(app, connpool) {
             cognome:req.body.cognome
         }
 
-        var sql = 'INSERT INTO utente (nominativo,nome,cognome) VALUES (?,?)'
-        var params = [data.description, data.status]
+        var sql = 'INSERT INTO utente (nominativo,nome,cognome) VALUES (?,?,?)'
+        var params = [data.nominativo, data.nome,data.cognome]
         connpool.query(sql, params, (error, results) => {
             if (error) {
                 res.status(400).json({ "error": error.message })
@@ -73,8 +73,9 @@ function endpoint(app, connpool) {
 
     app.put("/api/utenti/:id", (req, res) => {
         var data = {
-            description: req.body.description,
-            status: req.body.status,
+           nominativo: req.body.nominativo,
+            nome: req.body.nome,
+            cognome:req.body.cognome
         }
         connpool.execute(
             `UPDATE utente set 
