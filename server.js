@@ -25,6 +25,7 @@ require("./endpoints/utenti.js")(app,connpool)
 require("./endpoints/concerti.js")(app,connpool)
 require("./endpoints/cantanti.js")(app,connpool)
 require("./endpoints/città.js")(app,connpool)
+require("./endpoints/recensioni.js")(app,connpool)
 // Insert here other API endpoints
 
 // Default response for any other request

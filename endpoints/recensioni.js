@@ -15,12 +15,15 @@ function endpoint(app, connpool) {
             return;
         }
         var data = {
+            idutente: req.body.idutente,
+            idconcerto: req.body.idconcerto,
+            data: req.body.data,
             voto: req.body.voto,
             descrizione: req.body.descrizione,
         }
 
-        var sql = 'INSERT INTO recensione (voto, descrizione) VALUES (?,?)*'
-        var params = [data.voto, data.descrizione]
+        var sql = 'INSERT INTO recensione (idutente, idconcerto, data, voto, descrizione) VALUES (?,?,?,?,?)*'
+        var params = [data.idutente, data.idconcerto, data.data, data.voto, data.descrizione]
         connpool.query(sql, params, (error, results) => {
             if (error) {
                 res.status(400).json({ "error": error.message })
@@ -38,8 +41,8 @@ function endpoint(app, connpool) {
 
 
 
-    app.get("/api/concerti", (req, res, next) => {
-        var sql = "select * from concerto"
+    app.get("/api/recensioni", (req, res, next) => {
+        var sql = "select * from recensione"
         var params = []
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -54,8 +57,8 @@ function endpoint(app, connpool) {
     });
 
 
-    app.get("/api/concerti/:id", (req, res) => {
-        var sql = "select * from concerto where idconcerto = ?"
+    app.get("/api/recensioni/:id", (req, res) => {
+        var sql = "select * from recensione where idutente = ?"
         var params = [req.params.id]
         connpool.query(sql, params, (err, rows) => {
             if (err) {
@@ -70,17 +73,23 @@ function endpoint(app, connpool) {
     });
 
 
-    app.put("/api/concerti/:id", (req, res) => {
+    app.put("/api/recensioni/:id", (req, res) => {
         var data = {
-            nome: req.body.nome,
-            città: req.body.città,
+            idutente: req.body.idutente,
+            idconcerto: req.body.idconcerto,
+            data: req.body.data,
+            voto: req.body.voto,
+            descrizione: req.body.descrizione,
         }
         connpool.execute(
             `UPDATE concerto set 
-               nome = COALESCE(?,nome), 
-               città = COALESCE(?,città) 
+               idutente = COALESCE(?,idutente),
+               idconcerto = COALESCE(?,idconcerto),
+               data = COALESCE(?,data),
+               voto = COALESCE(?,voto), 
+               descrizione = COALESCE(?,descrizione) 
                WHERE idconcerto = ?`,
-            [data.nome, data.città, req.params.id],
+            [data.idutente, data.idconcerto, data.data, data.voto, data.descrizione, req.params.id],
             function (err, result) {
                 if (err){
                     res.status(400).json({"error": err.message})
@@ -97,9 +106,9 @@ function endpoint(app, connpool) {
 
 
 
-    app.delete("/api/concerti/:id", (req, res) => {
+    app.delete("/api/recensioni/:id", (req, res) => {
         connpool.execute(
-            'DELETE FROM concerto WHERE idconcerto = ?',
+            'DELETE FROM recensione WHERE idutente = ?',
             [req.params.id],
             function (err, result) {
                 if (err){
