@@ -22,7 +22,7 @@ function endpoint(app, connpool) {
         }
 
         var sql = 'INSERT INTO cantante (nomearte,nome,cognome,età) VALUES (?,?)'
-        var params = [data.description, data.status]
+        var params = [data.nomearte, data.nome, data.cognome, data.età]
         connpool.query(sql, params, (error, results) => {
             if (error) {
                 res.status(400).json({ "error": error.message })
@@ -74,8 +74,10 @@ function endpoint(app, connpool) {
 
     app.put("/api/cantanti/:id", (req, res) => {
         var data = {
-            description: req.body.description,
-            status: req.body.status,
+            nomearte: req.body.nomearte,
+            nome: req.body.nome,
+            nomearte: req.body.nomearte,
+            età:req.body.età
         }
         connpool.execute(
             `UPDATE cantante set 
@@ -84,7 +86,7 @@ function endpoint(app, connpool) {
                cognome = COALESCE(?,cognome),
                età = COALESCE(?,età)
                WHERE idcantante = ?`,
-            [data.description, data.status, req.params.id],
+            [data.nomearte, data.nome,data.cognome,data.età, req.params.id],
             function (err, result) {
                 if (err){
                     res.status(400).json({"error": err.message})
@@ -103,7 +105,7 @@ function endpoint(app, connpool) {
 
     app.delete("/api/cantanti/:id", (req, res) => {
         connpool.execute(
-            'DELETE FROM task WHERE idcantante = ?',
+            'DELETE FROM cantante WHERE idcantante = ?',
             [req.params.id],
             function (err, result) {
                 if (err){
