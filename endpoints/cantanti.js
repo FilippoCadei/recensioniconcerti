@@ -15,9 +15,9 @@ function endpoint(app, connpool) {
             return;
         }
         var data = {
-            nomearte:req.body.nominativo,
-            nome:req.body.nome,
-            cognome:req.body.cognome,
+            nomearte: req.body.nominativo,
+            nome: req.body.nome,
+            cognome: req.body.cognome,
             età: req.body.età
         }
 
@@ -31,7 +31,7 @@ function endpoint(app, connpool) {
             res.json({
                 "message": "success",
                 "data": data,
-                "id": this.insertID
+                "id": results.insertId
             })
             console.log(results)
         });
@@ -45,14 +45,14 @@ function endpoint(app, connpool) {
         var params = []
         connpool.query(sql, params, (err, rows) => {
             if (err) {
-              res.status(400).json({"error":err.message});
-              return;
+                res.status(400).json({ "error": err.message });
+                return;
             }
             res.json({
-                "message":"success",
-                "data":rows
+                "message": "success",
+                "data": rows
             })
-          });
+        });
     });
 
 
@@ -61,14 +61,14 @@ function endpoint(app, connpool) {
         var params = [req.params.id]
         connpool.query(sql, params, (err, rows) => {
             if (err) {
-              res.status(400).json({"error":err.message});
-              return;
+                res.status(400).json({ "error": err.message });
+                return;
             }
             res.json({
-                "message":"success",
-                "data":rows[0]
+                "message": "success",
+                "data": rows[0]
             })
-          });
+        });
     });
 
 
@@ -77,7 +77,7 @@ function endpoint(app, connpool) {
             nomearte: req.body.nomearte,
             nome: req.body.nome,
             nomearte: req.body.nomearte,
-            età:req.body.età
+            età: req.body.età
         }
         connpool.execute(
             `UPDATE cantante set 
@@ -86,19 +86,19 @@ function endpoint(app, connpool) {
                cognome = COALESCE(?,cognome),
                età = COALESCE(?,età)
                WHERE idcantante = ?`,
-            [data.nomearte, data.nome,data.cognome,data.età, req.params.id],
+            [data.nomearte, data.nome, data.cognome, data.età, req.params.id],
             function (err, result) {
-                if (err){
-                    res.status(400).json({"error": err.message})
+                if (err) {
+                    res.status(400).json({ "error": err.message })
                     return;
                 }
-                console.log(result )
+                console.log(result)
                 res.json({
                     message: "success",
                     data: data,
                     changes: result.affectedRows
                 })
-        });
+            });
     })
 
 
@@ -108,12 +108,12 @@ function endpoint(app, connpool) {
             'DELETE FROM cantante WHERE idcantante = ?',
             [req.params.id],
             function (err, result) {
-                if (err){
-                    res.status(400).json({"error": err.message})
+                if (err) {
+                    res.status(400).json({ "error": err.message })
                     return;
                 }
-                res.json({"message":"deleted", changes: result.affectedRows})
-        });
+                res.json({ "message": "deleted", changes: result.affectedRows })
+            });
     })
 
 
