@@ -15,7 +15,7 @@ function endpoint(app, connpool) {
             return;
         }
         var data = {
-            nomearte: req.body.nominativo,
+            nomearte: req.body.nomearte,
             nome: req.body.nome,
             cognome: req.body.cognome,
             età: req.body.età

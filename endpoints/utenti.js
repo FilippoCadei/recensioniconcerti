@@ -30,7 +30,7 @@ function endpoint(app, connpool) {
             res.json({
                 "message": "success",
                 "data": data,
-                "id": this.insertID
+                "id": results.insertId
             })
             console.log(results)
         });
