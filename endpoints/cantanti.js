@@ -21,7 +21,7 @@ function endpoint(app, connpool) {
             età: req.body.età
         }
 
-        var sql = 'INSERT INTO cantante (nomearte,nome,cognome,età) VALUES (?,?)'
+        var sql = 'INSERT INTO cantante (nomearte,nome,cognome,età) VALUES (?,?,?,?)'
         var params = [data.nomearte, data.nome, data.cognome, data.età]
         connpool.query(sql, params, (error, results) => {
             if (error) {
